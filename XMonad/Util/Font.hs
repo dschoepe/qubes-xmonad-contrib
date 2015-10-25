@@ -34,9 +34,7 @@ module XMonad.Util.Font
 
 import XMonad
 import Foreign
-import Control.Applicative
 import Control.Exception as E
-import Data.Maybe
 
 #ifdef XFT
 import Data.List
@@ -53,13 +51,6 @@ data XMonadFont = Core FontStruct
 
 -- $usage
 -- See "XMonad.Layout.Tabbed" or "XMonad.Prompt" for usage examples
-
--- | Get the Pixel value for a named color: if an invalid name is
--- given the black pixel will be returned.
-stringToPixel :: (Functor m, MonadIO m) => Display -> String -> m Pixel
-stringToPixel d s = fromMaybe fallBack <$> io getIt
-    where getIt    = initColor d s
-          fallBack = blackPixel d (defaultScreen d)
 
 econst :: a -> IOException -> a
 econst = const

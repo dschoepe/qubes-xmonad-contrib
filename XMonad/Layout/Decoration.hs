@@ -390,19 +390,21 @@ updateDeco sh t fs ((w,_),(Just dw,Just (Rectangle _ _ wh ht))) = do
   nw  <- getName w
   ur  <- readUrgents
   dpy <- asks display
+  qd <- getQubesData w
   let focusColor win ic ac uc = (maybe ic (\focusw -> case () of
                                                        _ | focusw == win -> ac
                                                          | win `elem` ur -> uc
                                                          | otherwise     -> ic) . W.peek)
                                 `fmap` gets windowset
-  (bc,borderc,tc) <- focusColor w (inactiveColor t, inactiveBorderColor t, inactiveTextColor t)
-                                  (activeColor   t, activeBorderColor   t, activeTextColor   t)
-                                  (urgentColor   t, urgentBorderColor   t, urgentTextColor   t)
+  (qcActive, qcInactive) <- qubesWindowColor w
+  (bc,borderc,tc) <- focusColor w (qcInactive,    qcInactive,          inactiveTextColor t)
+                                  (qcActive,      qcActive,            activeTextColor t)
+                                  (urgentColor t, urgentBorderColor t, urgentTextColor t)
   let s = shrinkIt sh
   name <- shrinkWhile s (\n -> do size <- io $ textWidthXMF dpy fs n
                                   return $ size > fromIntegral wh - fromIntegral (ht `div` 2)) (show nw)
   let als = AlignCenter : map snd (windowTitleAddons t)
-      strs = name : map fst (windowTitleAddons t)
+      strs = ("[" ++ qubesVmName qd ++ "] " ++ name) : map fst (windowTitleAddons t)
       i_als = map snd (windowTitleIcons t)
       icons = map fst (windowTitleIcons t)
   paintTextAndIcons dw fs wh ht 1 bc borderc tc bc als strs i_als icons
