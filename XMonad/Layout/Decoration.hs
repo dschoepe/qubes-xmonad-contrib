@@ -404,7 +404,7 @@ updateDeco sh t fs ((w,_),(Just dw,Just (Rectangle _ _ wh ht))) = do
   name <- shrinkWhile s (\n -> do size <- io $ textWidthXMF dpy fs n
                                   return $ size > fromIntegral wh - fromIntegral (ht `div` 2)) (show nw)
   let als = AlignCenter : map snd (windowTitleAddons t)
-      strs = ("[" ++ qubesVmName qd ++ "] " ++ name) : map fst (windowTitleAddons t)
+      strs = ("[" ++ qubesVMName qd ++ "] " ++ name) : map fst (windowTitleAddons t)
       i_als = map snd (windowTitleIcons t)
       icons = map fst (windowTitleIcons t)
   paintTextAndIcons dw fs wh ht 1 bc borderc tc bc als strs i_als icons
